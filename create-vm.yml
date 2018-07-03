@@ -18,7 +18,7 @@
       datacenter: "{{ dc_name }}"
       guest_id: centos64Guest
       disk:
-      - size_gb: 10
+      - size_gb: "{{ disk_gb }}"
         type: thin
         datastore: "{{ dest_ds }}"
       networks:
