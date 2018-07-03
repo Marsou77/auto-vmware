@@ -1,7 +1,9 @@
 ---
 - name : Automatize vmware
   hosts: localhost
-
+  
+- include_vars: credentials.yml
+  
   tasks:
   - name: Create VM
     local_action:
