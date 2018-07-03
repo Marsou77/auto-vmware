@@ -1,0 +1,92 @@
+---
+- name : Automatize vmware
+  hosts: localhost
+
+  tasks:
+  - name: Create Datacenter
+    local_action:
+      module: vmware_datacenter
+      hostname: "{{ ip_vc }}"
+      username: "{{ username_vc }}"
+      password: "{{ pass_vc }}"
+      datacenter_name: "{{ dc_name }}"
+      state: present
+      validate_certs: no
+    tags: dc
+
+  - name: Create Cluster with HA enabled
+    local_action:
+      module: vmware_cluster
+      hostname: "{{ ip_vc }}"
+      username: "{{ username_vc }}"
+      password: "{{ pass_vc }}"
+      datacenter_name: "{{ dc_name }}"
+      cluster_name: "{{ cluster_name }}"
+      enable_ha: yes
+      enable_drs: yes
+      enable_vsan: no
+      validate_certs: no
+    tags: cluster
+
+  - name: Add ESXi Host to vCenter
+    local_action:
+      module: vmware_host
+      hostname: '{{ ip_vc }}'
+      username: '{{ username_vc }}'
+      password: '{{ pass_vc }}'
+      datacenter_name: "{{ dc_name }}"
+      cluster_name: "{{ cluster_name }}"
+      esxi_hostname: '{{ item }}'
+      esxi_username: '{{ esxi_username }}'
+      esxi_password: '{{ esxi_password }}'
+      state: present
+      validate_certs: no
+    with_items:
+      - "{{ ip_esxi1 }}"
+      - "{{ ip_esxi2 }}"
+    tags: hosts
+
+  - name: Create VM
+    local_action:
+      module: vmware_guest
+      hostname: "{{ ip_vc }}"
+      username: "{{ username_vc }}"
+      password: "{{ pass_vc }}"
+      validate_certs: no
+      name: "{{ vm_name }}"
+      state: poweredoff
+      folder: /
+      datacenter: "{{ dc_name }}"
+      guest_id: centos64Guest
+      disk:
+      - size_gb: 10
+        type: thin
+        datastore: "{{ dest_ds }}"
+      networks:
+      - name: VM Network
+        type: dhcp
+      hardware:
+        memory_mb: "{{ memory_mb }}"
+        num_cpus: "{{ cpu_n }}"
+        scsi: paravirtual
+        hotadd_cpu: True
+        hotremove_cpu: True
+        hotadd_memory: False
+    tags: vm
+
+
+
+
+
+#  - name: Gather all registered virtual machines
+#    local_action:
+#      module: vmware_vm_facts
+#      hostname: "{{ ip_vc }}"
+#      username: "{{ username_vc }}"
+#      password: "{{ pass_vc }}"
+#      validate_certs: no
+#    register: vmfacts
+#    tags: gather
+
+#  - debug:
+#      var: vmfacts.virtual_machines
