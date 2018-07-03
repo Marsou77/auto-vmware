@@ -1,6 +1,8 @@
 ---
 - name : Automatize vmware
   hosts: localhost
+  vars_files:
+    - credential_vc.yml
 
   tasks:
   - name: Create Datacenter
