@@ -1,7 +1,8 @@
 ---
 - name : Automatize vmware
   hosts: localhost
-    vars_file: credential_vc.yml
+  vars_file:
+    - credential_vc.yml
   
   tasks:
   - name: Create VM
