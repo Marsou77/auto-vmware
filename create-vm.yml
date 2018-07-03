@@ -2,7 +2,7 @@
 - name : Automatize vmware
   hosts: localhost
   
-- include_vars: credentials.yml
+- include_vars: credential_vc.yml
   
   tasks:
   - name: Create VM
