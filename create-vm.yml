@@ -1,7 +1,7 @@
 ---
 - name : Automatize vmware
   hosts: localhost
-  vars_file:
+  vars_files:
     - credential_vc.yml
   
   tasks:
