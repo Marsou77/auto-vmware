@@ -1,26 +1,24 @@
 ---
 - name : Automatize vmware
   hosts: localhost
-  vars_files:
-    - credential_vc.yml
   
   tasks:
   - name: Create VM
     local_action:
       module: vmware_guest
-      hostname: "{{ ip_vc }}"
+      hostname: vcenter
       username: "{{ username_vc }}"
       password: "{{ pass_vc }}"
       validate_certs: no
       name: "{{ vm_name }}"
       state: poweredoff
       folder: /
-      datacenter: "{{ dc_name }}"
+      datacenter: XPERT-LAB GOLD
       guest_id: centos64Guest
       disk:
       - size_gb: "{{ disk_gb }}"
         type: thin
-        datastore: "{{ dest_ds }}"
+        datastore: SILVER-STORAGE
       networks:
       - name: VM Network
         type: dhcp
