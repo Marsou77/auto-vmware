@@ -13,7 +13,8 @@
       name: "{{ vm_name }}"
       state: poweredoff
       folder: /
-      datacenter: XPERT-LAB GOLD
+      datacenter: xpert-lab
+      cluster: XPERT-LAB GOLD
       guest_id: centos64Guest
       disk:
       - size_gb: "{{ disk_gb }}"
